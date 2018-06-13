@@ -46,8 +46,6 @@ def recebe_arestas(nome):
   temp2 = []
   for i in range(0,len(temp),2):
     temp2.append("{},{}".format(temp[i],temp[i+1]))
-    print(temp2[int(i/2)])
-  print(temp2)
   return temp2
 
 ''' Aqui eu faço questão de salvar valores que são float como float, int como int e string como string.
@@ -211,8 +209,7 @@ def aumentar_num_vertices(vertices, arestas, valores):
     arq3.write("\n")
     arq3.close()
 
-    #Salvar Valor da aresta
-    
+    #Salvar Valor da aresta    
     arq4 = open(pasta_nova+'\\Grafos\\'+nome_grafo+'.txt','a')
     for i in range(len(valores)-1):
         if is_int(valores[i]):
@@ -224,33 +221,57 @@ def aumentar_num_vertices(vertices, arestas, valores):
     arq4.write("{}".format(valores[-1]))
     arq4.write("\n")
     arq4.close()
-
     
     return nome_grafo
 
-def gerar_grafo_completo():
+def gerar_grafo_completo(vertices):
     print("Falta fazer")
+    nome_grafo = 'grafo_M';
+    
+    #Salvar Vertice
+    pasta_nova = os.path.dirname(os.path.realpath(__file__))
+    arq2 = open(pasta_nova+'\\Grafos\\'+nome_grafo+'.txt','w')
+    for i in range(len(vertices)-1):
+        arq2.write("{},".format(vertices[i]))
+    arq2.write("{}".format(vertices[-1]))
+    arq2.write("\n")
+    arq2.close()
+
+    cont = 0
+    #Salvar Aresta
+    arq3 = open(pasta_nova+'\\Grafos\\'+nome_grafo+'.txt','a')
+    for vertice1 in vertices:
+      for vertice2 in vertices:
+        if vertice1 == vertices[-1] and vertice2 == vertices[-1]:
+            arq3.write("({},{})".format(vertice1,vertice2))
+            break;
+        if vertice1 == vertice2:
+          continue;
+        arq3.write("({},{}),".format(vertice1,vertice2))
+        cont+=1
+    arq3.write("\n")      
+    arq3.close()
+    #Salvar Valor da aresta    
+    arq4 = open(pasta_nova+'\\Grafos\\'+nome_grafo+'.txt','a')
+    for i in range(cont):
+        arq4.write("{},".format(1))
+    arq4.write("{}".format(1))
+    arq4.write("\n")
+    arq4.close()
+    
+
+    
     #Deve-se criar dois for e cada vértice, ignorando a si mesmos.
+
+    
+
+
+    
 ''' As funções são divididas em: a função propriamente dita, que retorna o valor pedido pelo professor;
     e a parte funcional da função, a que retorna verdadeiro ou falso.
     Por isso será muito comundo encontrar:
     def func_alguma_coisa():
     def alguma_coisa():'''
-
-def func_is_direcionado(arestas):
-    #print(arestas)
-    for aresta in arestas:
-        a,b = aresta
-        if (b,a) not in arestas:
-            return False            
-    return True
-
-def is_direcionado(arestas):
-
-    if func_is_direcionado(arestas):
-        print("Pode ser direcionado\n");
-    else:
-        print("Não pode ser direcionado\n")
 
 def func_existe_aresta(aresta,arestas):
     ij = aresta.split(' ')
@@ -270,70 +291,17 @@ def existe_aresta(arestas):
         else:
             break
 
-def func_is_conexo(vertices,arestas):
-    conjunto_vertice = []
-
-    for aresta in arestas: 
-      for a in aresta:
-        conjunto_vertice.append(a)
-
-    conjunto_vertice = set(conjunto_vertice)
-    for vertice in vertices:
-        if vertice not in conjunto_vertice:
-            return False
-    return True
-
-def is_conexo(vertices,arestas):
-    print(vertices)
-    print(arestas)
-    if func_is_conexo(vertices,arestas):
-        print("O Grafo é conexo!\n")
-    else:
-        print("O Grafo não é conexo!\n")
-        
-def func_is_biconexo(arestas):
-  
-    print("Falta terminar")
-    #Retirar uma aresta por vez e verificar se ainda é conexo
-    for a in range(len(arestas)):
-      tem = arestas.pop(0)
-      if not func_is_conexo(arestas):
-        return False
-      arestas.append(tem)
-    return True
-
-def is_biconexo(arestas):
-    
-    if func_is_biconexo(arestas):
-      print("É Biconexo")
-    else:
-      print("Não é Biconexo")
-
-def there_is_ponto_de_articulacao():
-    print("Falta fazer")
-    #Retirar todas arestas que contém o vértice, um por vez, e verificar se ainda é conexo
-
-def unilateral_conexo():
-    print("Falta fazer")
-
-def forte_conexo():
-    print("Falta fazer")
-
-def valor_grau():
-    print("Falta fazer")
-    #Contabilizar quantas vezes o vértice aparece na lista de arestas, se for direcionado (perguntar ao usuário), dividir esse valor por 2.
     
 
 def main():
-    grafo = 'grafo_H'
+    grafo = 'grafo_G'
     vertices = recebe_vertices(grafo)
     arestas = recebe_arestas(grafo)
     valores = recebe_valor_arestas(grafo)
-    escolha = -1
 
     ''' Aqui ficam guardas as questões.
         Isso foi feito para otimizar os parâmetros (muitsa funções podem ter os mesmos parãmetros, logo, geraria muitos if: elif: desnecessários.'''
-    opcoes = ["\nObrigado pela atenção!","\nDe troca vamos, então!\n",existe_aresta,is_conexo,is_direcionado]
+    opcoes = ["\nObrigado pela atenção!","\nDe troca vamos, então!\n",existe_aresta]
 
     while True:
 
@@ -350,11 +318,10 @@ def main():
             arestas = recebe_arestas(grafo)
             valores = recebe_valor_arestas(grafo)
 
-        if escolha in [2,4]:
+        if escolha in [2]:
             opcoes[escolha](arestas)
-        elif escolha in [3]:
-            opcoes[escolha](vertices,arestas)
-        elif escolha in [5]: #Opção para testes, por enquanto. Visto que estava testando bastante as questões de produzir o grafo através do arquivo, para ser uma matriz etc.
-          aumentar_num_vertices(vertices,arestas,valores)
+        elif escolha in [3]: #Opção para testes, por enquanto. Visto que estava testando bastante as questões de produzir o grafo através do arquivo, para ser uma matriz etc.
+          #aumentar_num_vertices(vertices,arestas,valores)
+          gerar_grafo_completo(vertices)
             
 main()
